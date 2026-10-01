@@ -1,8 +1,10 @@
 from sqlalchemy import Column, Integer, String, Text
+
 from fast_car_api.database import Base
 
+
 class Car(Base):
-    __tablename__ = 'cars' # Nome da tabela
+    __tablename__ = 'cars'  # Nome da tabela
 
     id = Column(Integer, primary_key=True, index=True)
     marca = Column(String, nullable=False)
@@ -11,4 +13,3 @@ class Car(Base):
     ano_fabricacao = Column(Integer, nullable=True)
     ano_modelo = Column(Integer, nullable=True)
     descricao = Column(Text, nullable=True)
-    
