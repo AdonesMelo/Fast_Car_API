@@ -69,3 +69,14 @@ def patch_car(car_id: int, car: CarPartialUpdate, session: Session = Depends(get
     session.commit()
     session.refresh(db_car)
     return db_car
+
+
+# Rota para excluir um carro
+@router.delete(path='/{car_id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_car(car_id: int, session: Session = Depends(get_session)):
+    '''Exclui um carro'''
+    car = session.get(Car, car_id)
+    if not car:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Car not found')
+    session.delete(car)
+    session.commit()
