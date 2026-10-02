@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from fast_car_api.database import get_session
 from fast_car_api.models import Car
-from fast_car_api.schemas import CarList,CarPublic, CarSchema
+from fast_car_api.schemas import CarList, CarPartialUpdate, CarPublic, CarSchema
 
 # Inicialização da API
 router = APIRouter(
@@ -50,6 +50,21 @@ def update_car(car_id: int, car: CarSchema, session: Session = Depends(get_sessi
     if not db_car:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Car not found')
     for field, value in car.model_dump().items():
+        setattr(db_car, field, value)
+    session.commit()
+    session.refresh(db_car)
+    return db_car
+
+
+# Rota para atualizar um carro parcialmente
+@router.patch(path='/{car_id}', response_model=CarPublic, status_code=status.HTTP_200_OK)
+def patch_car(car_id: int, car: CarPartialUpdate, session: Session = Depends(get_session)):
+    '''Atualiza um carro parcialmente, retornando o ID do carro atualizado'''
+    db_car = session.get(Car, car_id)
+    if not db_car:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Car not found')
+    update_data = {k: v for k,v in car.model_dump(exclude_unset=True).items()}
+    for field, value in update_data.items():
         setattr(db_car, field, value)
     session.commit()
     session.refresh(db_car)
