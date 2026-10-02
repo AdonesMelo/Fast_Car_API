@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status
+
+from fast_car_api.schemas import CarPublic, CarSchema
 
 # Inicialização da API
 router = APIRouter(
@@ -6,14 +8,7 @@ router = APIRouter(
     tags=['cars'],
 )
 
-
-# Rotas de acesso aos dados da API
-@router.get('/')
-def list_cars():
-    return {
-        'cars': [
-            {'id': 1, 'modelo': 'Golf GTI'},
-            {'id': 2, 'modelo': 'Audi A3'},
-            {'id': 3, 'modelo': 'Mustang GT'},
-        ]
-    }
+# Rota para criar um novo carro
+@router.post(path='/', response_model=CarPublic, status_code=status.HTTP_201_CREATED)
+def create_car(car: CarSchema):
+    return car
