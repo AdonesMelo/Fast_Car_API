@@ -16,7 +16,11 @@ class CarPublic(BaseModel):
     id: int
     marca: str
     modelo: str
-    cor: str
-    ano_fabricacao: int
-    ano_modelo: int
-    descricao: str
+    cor: Optional[str] = None
+    ano_fabricacao: Optional[int] = None
+    ano_modelo: Optional[int] = None
+    descricao: Optional[str] = None
+
+
+class CarList(BaseModel):
+    cars: list[CarPublic]
